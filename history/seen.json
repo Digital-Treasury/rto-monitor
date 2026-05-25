@@ -1,0 +1,4 @@
+{
+  "description": "History of items already captured by the RTO Monitor routine. Used for deduplication across runs.",
+  "items": []
+}

@@ -1,0 +1,76 @@
+{
+  "description": "Source list for RTO regulatory news monitoring. Tier 1 = must monitor, Tier 2 = industry/adjacent, Tier 3 = optional state-specific.",
+  "last_updated": "2026-05-25",
+  "sources": [
+    {
+      "name": "ASQA News",
+      "url": "https://www.asqa.gov.au/news-publications/news",
+      "tier": 1,
+      "type": "html",
+      "notes": "Primary RTO regulator. Highest signal source."
+    },
+    {
+      "name": "training.gov.au",
+      "url": "https://training.gov.au",
+      "tier": 1,
+      "type": "html",
+      "notes": "Training package and qualification updates. May need to navigate to specific notices section."
+    },
+    {
+      "name": "DEWR Skills and Training",
+      "url": "https://www.dewr.gov.au/skills-and-training",
+      "tier": 1,
+      "type": "html",
+      "notes": "Department of Employment and Workplace Relations. VET policy announcements."
+    },
+    {
+      "name": "Skills Insight",
+      "url": "https://www.skillsinsight.com.au/news",
+      "tier": 1,
+      "type": "html",
+      "notes": "Jobs and Skills Council. Training package development updates."
+    },
+    {
+      "name": "ITECA News",
+      "url": "https://www.iteca.edu.au/news",
+      "tier": 2,
+      "type": "html",
+      "notes": "Independent Tertiary Education Council Australia. Peak body for private RTOs."
+    },
+    {
+      "name": "VELG Training Blog",
+      "url": "https://www.velgtraining.com/blog",
+      "tier": 2,
+      "type": "html",
+      "notes": "Compliance commentary and analysis. Often summarises ASQA updates."
+    },
+    {
+      "name": "TEQSA News",
+      "url": "https://www.teqsa.gov.au/latest-news",
+      "tier": 2,
+      "type": "html",
+      "notes": "Higher education regulator. Relevant for dual-sector RTOs."
+    },
+    {
+      "name": "NCVER News",
+      "url": "https://www.ncver.edu.au/news-and-events",
+      "tier": 2,
+      "type": "html",
+      "notes": "National Centre for Vocational Education Research. Data and research findings."
+    },
+    {
+      "name": "ASIC Newsroom",
+      "url": "https://asic.gov.au/newsroom",
+      "tier": 2,
+      "type": "html",
+      "notes": "Relevant for RTO directors. Filter heavily — most ASIC news is not RTO-relevant."
+    },
+    {
+      "name": "Home Affairs CRICOS",
+      "url": "https://immi.homeaffairs.gov.au/what-we-do/cricos",
+      "tier": 2,
+      "type": "html",
+      "notes": "International student RTO requirements. Only relevant for CRICOS-registered providers."
+    }
+  ]
+}

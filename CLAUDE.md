@@ -34,11 +34,24 @@ size training providers. They care about:
 
 For each source in `sources.json`:
 
-- Use WebFetch to retrieve the page
-- If a source returns 403, blocked, requires JavaScript rendering, or returns
-  unusable structure, log it under "Sources needing manual review" and move on
-- Do NOT retry blocked sources — token cost isn't worth it
-- Extract items with their title, URL, publish date, and a brief excerpt
+- Check the `type` field:
+  - If `type` is `rss`: use WebFetch on the `url`. The response should
+    be XML. Parse `<item>` blocks for title, link, pubDate, and
+    description.
+  - If `type` is `html`: use WebFetch on the `url` and extract recent
+    articles from the HTML structure.
+
+- If the response is non-XML for an RSS source, returns a bot-challenge
+  page (Cloudflare "Just a moment", "Enable JavaScript"), or returns an
+  empty/thin body, log the source under "Sources needing manual review"
+  with the specific error and move on.
+
+- For RSS sources, treat the `<pubDate>` field as authoritative for the
+  publish date. For HTML sources, look for visible publish dates on the
+  page.
+
+- Never retry a failed source within the same run. Token cost isn't
+  worth it.
 
 ### 3. Filter to new and recent items
 

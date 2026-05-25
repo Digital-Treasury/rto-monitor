@@ -1,4 +1,11 @@
 {
   "description": "History of items already captured by the RTO Monitor routine. Used for deduplication across runs.",
-  "items": []
+  "items": [
+    {
+      "url": "https://skillsinsight.com.au/news/participate-in-racing-and-breeding-skills-review/",
+      "title_hash": "c812bffa",
+      "captured": "2026-05-25",
+      "source": "Skills Insight"
+    }
+  ]
 }

@@ -1,76 +1,76 @@
 {
-  "description": "Source list for RTO regulatory news monitoring. Tier 1 = must monitor, Tier 2 = industry/adjacent, Tier 3 = optional state-specific.",
+  "description": "Source list for RTO regulatory news monitoring. RSS preferred where available (verified 2026-05-25). HTML sources may be blocked by bot protection or JS rendering — those failures are expected and logged for manual review.",
   "last_updated": "2026-05-25",
   "sources": [
     {
       "name": "ASQA News",
-      "url": "https://www.asqa.gov.au/news-publications/news",
+      "url": "https://www.asqa.gov.au/rss.xml",
       "tier": 1,
-      "type": "html",
-      "notes": "Primary RTO regulator. Highest signal source."
+      "type": "rss",
+      "notes": "Primary RTO regulator. Highest signal source. RSS verified working."
+    },
+    {
+      "name": "Skills Insight",
+      "url": "https://www.skillsinsight.com.au/news/feed",
+      "tier": 1,
+      "type": "rss",
+      "notes": "Jobs and Skills Council. Training package development updates. RSS verified working."
+    },
+    {
+      "name": "TEQSA News",
+      "url": "https://www.teqsa.gov.au/rss.xml",
+      "tier": 2,
+      "type": "rss",
+      "notes": "Higher education regulator. Relevant for dual-sector RTOs. RSS verified working."
     },
     {
       "name": "training.gov.au",
       "url": "https://training.gov.au",
       "tier": 1,
       "type": "html",
-      "notes": "Training package and qualification updates. May need to navigate to specific notices section."
+      "notes": "No RSS available. May return bot-protection page — log if blocked."
     },
     {
       "name": "DEWR Skills and Training",
       "url": "https://www.dewr.gov.au/skills-and-training",
       "tier": 1,
       "type": "html",
-      "notes": "Department of Employment and Workplace Relations. VET policy announcements."
-    },
-    {
-      "name": "Skills Insight",
-      "url": "https://www.skillsinsight.com.au/news",
-      "tier": 1,
-      "type": "html",
-      "notes": "Jobs and Skills Council. Training package development updates."
+      "notes": "No RSS available. May return bot-protection page — log if blocked."
     },
     {
       "name": "ITECA News",
       "url": "https://www.iteca.edu.au/news",
       "tier": 2,
       "type": "html",
-      "notes": "Independent Tertiary Education Council Australia. Peak body for private RTOs."
+      "notes": "No RSS available. Known to use Cloudflare protection — likely to fail until Playwright is added."
     },
     {
       "name": "VELG Training Blog",
       "url": "https://www.velgtraining.com/blog",
       "tier": 2,
       "type": "html",
-      "notes": "Compliance commentary and analysis. Often summarises ASQA updates."
-    },
-    {
-      "name": "TEQSA News",
-      "url": "https://www.teqsa.gov.au/latest-news",
-      "tier": 2,
-      "type": "html",
-      "notes": "Higher education regulator. Relevant for dual-sector RTOs."
+      "notes": "No RSS available. JS-rendered content — likely to fail until Playwright is added."
     },
     {
       "name": "NCVER News",
       "url": "https://www.ncver.edu.au/news-and-events",
       "tier": 2,
       "type": "html",
-      "notes": "National Centre for Vocational Education Research. Data and research findings."
+      "notes": "No RSS available. May return bot-protection page — log if blocked."
     },
     {
       "name": "ASIC Newsroom",
       "url": "https://asic.gov.au/newsroom",
       "tier": 2,
       "type": "html",
-      "notes": "Relevant for RTO directors. Filter heavily — most ASIC news is not RTO-relevant."
+      "notes": "No RSS available. Filter heavily — most ASIC news is not RTO-relevant."
     },
     {
       "name": "Home Affairs CRICOS",
       "url": "https://immi.homeaffairs.gov.au/what-we-do/cricos",
       "tier": 2,
       "type": "html",
-      "notes": "International student RTO requirements. Only relevant for CRICOS-registered providers."
+      "notes": "No RSS available. International student RTO requirements only."
     }
   ]
 }

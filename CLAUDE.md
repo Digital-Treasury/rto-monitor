@@ -13,7 +13,7 @@ a concise report.
 RTO owners, compliance managers, training managers, and CEOs of small-to-mid
 size training providers. They care about:
 
-- ASQA audits, audit outcomes, enforcement actions
+- ASQA audits, audit outcomes, enforcement actions, deregistrations
 - Standards for RTOs (compliance changes, new standards)
 - Training package and qualification updates
 - USI (Unique Student Identifier) changes
@@ -29,15 +29,27 @@ size training providers. They care about:
 - Read `sources.json` for the list of URLs to check
 - Read `history/seen.json` for items already captured in past runs
 - Note today's date (provided in the prompt)
+- Confirm `FIRECRAWL_API_KEY` is available as an environment variable
 
 ### 2. Fetch each source
 
-For each source in `sources.json`, use `bash_tool` with `curl` to fetch the
-content. Do NOT use WebFetch — it performs a robots.txt check that times
-out on many Australian government sites, blocking otherwise-valid fetches.
-curl bypasses this check and is the correct tool for this environment.
+For each source in `sources.json`, check the `requires_firecrawl` flag:
 
-**Command pattern:**
+**If `requires_firecrawl` is `true`**, use Firecrawl via bash + curl:
+
+```bash
+curl -s -X POST 'https://api.firecrawl.dev/v2/scrape' \
+  -H "Authorization: Bearer $FIRECRAWL_API_KEY" \
+  -H 'Content-Type: application/json' \
+  --data-raw "{\"url\":\"SOURCE_URL_HERE\"}"
+```
+
+The response is JSON. The scraped content is in `data.markdown`. Parse
+that markdown for article titles, dates, and URLs. Firecrawl returns
+clean markdown with item titles as `**bold**` text, dates in plain text,
+and links in standard markdown format.
+
+**If `requires_firecrawl` is `false` or unset**, use plain curl:
 
 ```bash
 curl -sL \
@@ -45,37 +57,22 @@ curl -sL \
   -H "Accept: application/rss+xml, application/xml, text/xml, text/html" \
   --max-time 30 \
   --retry 1 \
-  "URL_HERE"
+  "SOURCE_URL_HERE"
 ```
 
-Flags explained:
-- `-s` silent (no progress bar in output)
-- `-L` follow redirects
-- `-A` browser user-agent (avoids simple bot filters)
-- `-H "Accept: ..."` tells servers we want RSS/HTML
-- `--max-time 30` hard timeout per request
-- `--retry 1` retry once on transient failure
+**For both methods:**
 
-**For each source:**
+- Check the `type` field:
+  - If `type` is `rss`: parse `<item>` blocks for title, link, pubDate, description
+  - If `type` is `html`: extract recent articles from the markdown/HTML structure
+- If response is empty, returns an error JSON (`success: false`), or
+  contains bot-challenge text, log under "Sources needing manual review"
+  and move on
+- Never retry a failed source more than once
 
-- Run the curl command with the source's `url`
-- Check the `type` field in `sources.json`:
-  - If `type` is `rss`: response should be XML. Parse `<item>` blocks for
-    title, link, pubDate, and description.
-  - If `type` is `html`: extract recent articles from the HTML structure.
-    Look for visible publish dates on the page.
-
-- If curl exits non-zero, returns empty, or returns a bot-challenge page
-  (contains "Just a moment", "Enable JavaScript", or is suspiciously thin
-  <500 chars for an HTML source), log the source under "Sources needing
-  manual review" with the specific error and move on.
-
-- Never retry a failed source more than once within the same run. Token
-  cost isn't worth it.
-
-- For RSS sources, treat the `<pubDate>` field as authoritative for the
-  publish date. For HTML sources, look for visible publish dates on the
-  page.
+**Important:** Do NOT use the WebFetch tool — it performs a robots.txt
+check that times out on many sites. curl (with or without Firecrawl) is
+the correct tool for this environment.
 
 ### 3. Filter to new and recent items
 
@@ -100,7 +97,7 @@ Score each candidate item:
   content, event announcements, regulator hiring, conference recaps,
   award winners
 
-**Drop LOW-relevance items entirely.** Do not include them in the report.
+**Drop LOW-relevance items entirely.**
 
 ### 5. Update history
 
@@ -117,7 +114,7 @@ Append every NEW item (HIGH and MEDIUM) to `history/seen.json` with:
 
 ### 6. Write the daily report
 
-Write to `reports/daily-YYYY-MM-DD.md` using this exact structure:
+Write to `reports/daily-YYYY-MM-DD.md` using this structure:
 
 ```markdown
 # RTO Monitor — Daily Report
@@ -151,48 +148,40 @@ URL: [link]
 ## Suggested LinkedIn content topics
 
 [Bullet list of 1-3 strongest content angles from this run. Each one line.
-Write the actual hook, not a description of it. If nothing is content-worthy,
-write "None this run."]
+Write the actual hook. If nothing content-worthy, write "None this run."]
 
 ## Sources needing manual review
 
 [List any source that blocked access, timed out, or returned unexpected
-structure. One line each. Format: "Source Name — reason"]
+structure. Format: "Source Name — reason"]
 
-[If no issues, write "All sources fetched cleanly."]
+[If no issues: "All sources fetched cleanly."]
 ```
 
 ### 7. Friday weekly compilation
 
-If today is a Friday, also write `reports/weekly-YYYY-W##.md` (ISO week
-number):
+If today is a Friday, also write `reports/weekly-YYYY-W##.md`:
 
 - Read all daily reports from the past 7 days
 - De-duplicate items across days
 - Group by theme (not by day)
 - Lead with the 3-5 most significant items
-- Include a "This week's content angles" section listing the YES-flagged
-  items
-- Keep total length under 2 pages — this gets read in a Monday meeting
+- Include a "This week's content angles" section
+- Keep under 2 pages — read in a Monday meeting
 
 ### 8. Post summary to Notion
 
-Use the Notion connector to post a summary to the "RTO Monitor" database
-in the workspace.
+Use the Notion connector to post a summary to the "RTO Monitor" database.
 
-- If the database doesn't exist, create it with these properties:
-  Date (date), Source (text), Title (text), Relevance (select: HIGH/MEDIUM),
-  Content-worthy (checkbox), URL (URL), Summary (text)
+- If database doesn't exist, create it with: Date (date), Source (text),
+  Title (text), Relevance (select: HIGH/MEDIUM), Content-worthy (checkbox),
+  URL (URL), Summary (text)
 - Add one row per new item from this run
-- Do NOT duplicate items already in the database (check by URL before
-  inserting)
-- If the Notion connector is read-only and cannot create or write, note
-  this at the bottom of the daily report and continue with the rest of
-  the routine. Do not fail the run.
+- Check by URL before inserting to avoid duplicates
+- **If the Notion connector is read-only or fails, note this at the
+  bottom of the daily report and continue. Do not fail the run.**
 
 ### 9. Commit and push directly to main
-
-Commit changes and push DIRECTLY to main:
 
 ```bash
 git add -A
@@ -200,23 +189,19 @@ git commit -m "Monitor run: YYYY-MM-DD (X new items)"
 git push origin HEAD:main
 ```
 
-Do NOT create or push to a claude/-prefixed branch. The main branch must
-receive the updated history/seen.json directly so deduplication works
-across runs.
+Do NOT push to a claude/-prefixed branch. The main branch must receive
+updates directly so deduplication works across runs.
 
 ## Constraints
 
-- **Plain language.** No marketing voice. No "exciting developments" or
-  "groundbreaking changes". Just what changed and what it means.
-- **Don't pad.** If nothing new and relevant exists, say so. A short clean
-  report is better than a long padded one.
-- **Never fabricate.** If a date or detail isn't clearly visible on the
-  source page, write "date unclear" rather than guess.
-- **Token budget.** Aim for under ~2000 tokens in the daily report. The
-  weekly should be under ~3000.
-- **No partial work.** If you can't complete a step (e.g., Notion connector
-  fails), still write the markdown report and commit it. Note the failure
-  at the bottom of the report.
+- **Plain language.** No marketing voice. No "exciting developments"
+  or "groundbreaking changes". Just what changed and what it means.
+- **Don't pad.** Short clean report > long padded one.
+- **Never fabricate.** If a date or detail isn't clearly visible, write
+  "date unclear" rather than guess.
+- **Token budget.** Daily report ≤2000 tokens. Weekly ≤3000.
+- **Firecrawl credit awareness.** Each Firecrawl call uses 1 credit.
+  Don't re-fetch a source within the same run.
 
 ## What "content-worthy" means
 
@@ -224,12 +209,12 @@ Flag YES when the item could become a useful LinkedIn post for an RTO
 audience. Good signals:
 
 - A specific change RTOs need to act on (deadline, new requirement)
+- An audit finding or enforcement action others can learn from
 - A common misconception the news clarifies
 - A practical compliance tip embedded in the announcement
-- An audit finding pattern others can learn from
 
 Skip YES when:
 
-- The news is purely informational with no action implied
-- The angle would require speculation beyond what's stated
-- It's a story everyone in the sector already knows
+- Purely informational with no action implied
+- Would require speculation beyond what's stated
+- A story everyone in the sector already knows

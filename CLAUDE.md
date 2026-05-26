@@ -31,55 +31,68 @@ size training providers. They care about:
 - Note today's date (provided in the prompt)
 
 ### 2. Fetch each source
-For each source in sources.json, use bash_tool with curl to fetch the
-content. Do NOT use WebFetch — it performs a robots.txt check that times out
-on many Australian government sites, blocking otherwise-valid fetches.
-Command pattern:
-bashcurl -sL \
+
+For each source in `sources.json`, use `bash_tool` with `curl` to fetch the
+content. Do NOT use WebFetch — it performs a robots.txt check that times
+out on many Australian government sites, blocking otherwise-valid fetches.
+curl bypasses this check and is the correct tool for this environment.
+
+**Command pattern:**
+
+```bash
+curl -sL \
   -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
   -H "Accept: application/rss+xml, application/xml, text/xml, text/html" \
   --max-time 30 \
   --retry 1 \
   "URL_HERE"
+```
+
 Flags explained:
+- `-s` silent (no progress bar in output)
+- `-L` follow redirects
+- `-A` browser user-agent (avoids simple bot filters)
+- `-H "Accept: ..."` tells servers we want RSS/HTML
+- `--max-time 30` hard timeout per request
+- `--retry 1` retry once on transient failure
 
--s silent (no progress bar in output)
--L follow redirects
--A browser user-agent (avoids simple bot filters)
--H "Accept: ..." tells servers we want RSS/HTML
---max-time 30 hard timeout per request
---retry 1 retry once on transient failure
+**For each source:**
 
-For each source:
+- Run the curl command with the source's `url`
+- Check the `type` field in `sources.json`:
+  - If `type` is `rss`: response should be XML. Parse `<item>` blocks for
+    title, link, pubDate, and description.
+  - If `type` is `html`: extract recent articles from the HTML structure.
+    Look for visible publish dates on the page.
 
-Run the curl command with the source's url
-If exit code is non-zero or the response is empty, log the source under
-"Sources needing manual review" with the curl error and move on
-If type is rss: parse the XML for <item> blocks. Extract title,
-link, pubDate, description.
-If type is html: extract recent articles from the HTML. Look for
-publish dates in visible text.
-If response is a bot-challenge page (contains "Just a moment",
-"Enable JavaScript", or is suspiciously thin <500 chars for an HTML
-source), log it under manual review.
+- If curl exits non-zero, returns empty, or returns a bot-challenge page
+  (contains "Just a moment", "Enable JavaScript", or is suspiciously thin
+  <500 chars for an HTML source), log the source under "Sources needing
+  manual review" with the specific error and move on.
 
-Important: Never use WebFetch in this routine. The robots.txt timeout
-issue blocks too many of the target sources. curl is the correct tool
-for this environment.
+- Never retry a failed source more than once within the same run. Token
+  cost isn't worth it.
+
+- For RSS sources, treat the `<pubDate>` field as authoritative for the
+  publish date. For HTML sources, look for visible publish dates on the
+  page.
 
 ### 3. Filter to new and recent items
 
 - Only consider items published or updated in the last 7 days
-- Skip anything whose URL OR title-hash matches an entry in `history/seen.json`
-- Older items that appear "new" to the scraper (e.g., reordered lists) are NOT new
+- Skip anything whose URL OR title-hash matches an entry in
+  `history/seen.json`
+- Older items that appear "new" to the scraper (e.g., reordered lists)
+  are NOT new
 
 ### 4. Judge relevance
 
 Score each candidate item:
 
-- **HIGH**: Direct compliance impact — ASQA audits/enforcement, Standards for
-  RTOs changes, training package updates, USI/AVETMISS changes, ASQA fees,
-  CRICOS changes, anything that affects how an RTO operates day-to-day
+- **HIGH**: Direct compliance impact — ASQA audits/enforcement, Standards
+  for RTOs changes, training package updates, USI/AVETMISS changes, ASQA
+  fees, CRICOS changes, anything that affects how an RTO operates
+  day-to-day
 - **MEDIUM**: VET policy direction, funding announcements, peak body
   submissions, NCVER research with practical implications, ASIC changes
   affecting RTO directors
@@ -151,30 +164,45 @@ structure. One line each. Format: "Source Name — reason"]
 
 ### 7. Friday weekly compilation
 
-If today is a Friday, also write `reports/weekly-YYYY-W##.md` (ISO week number):
+If today is a Friday, also write `reports/weekly-YYYY-W##.md` (ISO week
+number):
 
 - Read all daily reports from the past 7 days
 - De-duplicate items across days
 - Group by theme (not by day)
 - Lead with the 3-5 most significant items
-- Include a "This week's content angles" section listing the YES-flagged items
+- Include a "This week's content angles" section listing the YES-flagged
+  items
 - Keep total length under 2 pages — this gets read in a Monday meeting
 
 ### 8. Post summary to Notion
 
-Use the Notion connector to post a summary to the "RTO Monitor" database in
-the workspace.
+Use the Notion connector to post a summary to the "RTO Monitor" database
+in the workspace.
 
 - If the database doesn't exist, create it with these properties:
   Date (date), Source (text), Title (text), Relevance (select: HIGH/MEDIUM),
   Content-worthy (checkbox), URL (URL), Summary (text)
 - Add one row per new item from this run
-- Do NOT duplicate items already in the database (check by URL before inserting)
+- Do NOT duplicate items already in the database (check by URL before
+  inserting)
+- If the Notion connector is read-only and cannot create or write, note
+  this at the bottom of the daily report and continue with the rest of
+  the routine. Do not fail the run.
 
-### 9. Commit and push
+### 9. Commit and push directly to main
 
-Commit all changes (updated `history/seen.json`, new report files) back to
-the repo with message: `Monitor run: YYYY-MM-DD (X new items)`
+Commit changes and push DIRECTLY to main:
+
+```bash
+git add -A
+git commit -m "Monitor run: YYYY-MM-DD (X new items)"
+git push origin HEAD:main
+```
+
+Do NOT create or push to a claude/-prefixed branch. The main branch must
+receive the updated history/seen.json directly so deduplication works
+across runs.
 
 ## Constraints
 

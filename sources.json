@@ -1,6 +1,6 @@
 {
   "description": "Source list for RTO regulatory news monitoring. Sources with requires_firecrawl=true are fetched via the Firecrawl API to bypass WAF/JS-rendering issues. Others use plain curl.",
-  "last_updated": "2026-05-26",
+  "last_updated": "2026-05-27",
   "sources": [
     {
       "name": "ASQA Latest News",
@@ -16,7 +16,7 @@
       "tier": 1,
       "type": "html",
       "requires_firecrawl": true,
-      "notes": "ASQA enforcement actions and deregistrations. Highest signal for LinkedIn content."
+      "notes": "ASQA enforcement actions, deregistrations, provider sanctions. Highest content value for LinkedIn — audit-finding stories perform well."
     },
     {
       "name": "Skills Insight",
@@ -24,7 +24,23 @@
       "tier": 1,
       "type": "rss",
       "requires_firecrawl": false,
-      "notes": "Jobs and Skills Council. RSS works via curl directly."
+      "notes": "Jobs and Skills Council for training package development. RSS works via curl directly."
+    },
+    {
+      "name": "Jobs and Skills Australia",
+      "url": "https://www.jobsandskills.gov.au/news-and-media",
+      "tier": 1,
+      "type": "html",
+      "requires_firecrawl": true,
+      "notes": "Strategic workforce body. Reports shape which qualifications get funding priority. Likely WAF-protected."
+    },
+    {
+      "name": "Home Affairs Newsroom",
+      "url": "https://immi.homeaffairs.gov.au/news-media/archive",
+      "tier": 1,
+      "type": "html",
+      "requires_firecrawl": true,
+      "notes": "Student visa policy and CRICOS-relevant announcements. The CRICOS suspension story originated here, not at ASQA."
     },
     {
       "name": "ITECA News",
@@ -32,15 +48,15 @@
       "tier": 2,
       "type": "html",
       "requires_firecrawl": false,
-      "notes": "Independent Tertiary Education Council. Working via curl as of 2026-05-26."
+      "notes": "Independent Tertiary Education Council. Working via curl as of 2026-05-26. DNS occasionally flakes."
     },
     {
       "name": "ASIC Newsroom",
       "url": "https://asic.gov.au/newsroom",
       "tier": 2,
       "type": "html",
-      "requires_firecrawl": false,
-      "notes": "Working via underlying JSON API. Filter heavily — most ASIC news not RTO-relevant."
+      "requires_firecrawl": true,
+      "notes": "JavaScript-rendered. Use Firecrawl with waitFor=3000 retry. Filter heavily — most ASIC news not RTO-relevant."
     },
     {
       "name": "TEQSA News",
@@ -48,7 +64,7 @@
       "tier": 2,
       "type": "html",
       "requires_firecrawl": true,
-      "notes": "Higher ed regulator. WAF-blocked to curl, try via Firecrawl."
+      "notes": "Higher ed regulator. Only relevant for dual-sector RTOs."
     },
     {
       "name": "DEWR Skills and Training",
@@ -56,7 +72,7 @@
       "tier": 1,
       "type": "html",
       "requires_firecrawl": true,
-      "notes": "WAF-blocked to curl, try via Firecrawl."
+      "notes": "Currently returns navigation hub only — needs better news-specific URL. Low yield until fixed."
     },
     {
       "name": "NCVER News",
@@ -64,7 +80,7 @@
       "tier": 2,
       "type": "html",
       "requires_firecrawl": true,
-      "notes": "Cloudflare-protected. Firecrawl should handle it."
+      "notes": "Vocational education research. Publishes infrequently — most updates pre-date 7-day window."
     },
     {
       "name": "training.gov.au",
@@ -72,7 +88,7 @@
       "tier": 1,
       "type": "html",
       "requires_firecrawl": true,
-      "notes": "JS-rendered SPA. Firecrawl renders JS, should work."
+      "notes": "JS-rendered SPA. Training package updates only — sparse news."
     }
   ]
 }

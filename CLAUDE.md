@@ -31,27 +31,41 @@ size training providers. They care about:
 - Note today's date (provided in the prompt)
 
 ### 2. Fetch each source
+For each source in sources.json, use bash_tool with curl to fetch the
+content. Do NOT use WebFetch — it performs a robots.txt check that times out
+on many Australian government sites, blocking otherwise-valid fetches.
+Command pattern:
+bashcurl -sL \
+  -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+  -H "Accept: application/rss+xml, application/xml, text/xml, text/html" \
+  --max-time 30 \
+  --retry 1 \
+  "URL_HERE"
+Flags explained:
 
-For each source in `sources.json`:
+-s silent (no progress bar in output)
+-L follow redirects
+-A browser user-agent (avoids simple bot filters)
+-H "Accept: ..." tells servers we want RSS/HTML
+--max-time 30 hard timeout per request
+--retry 1 retry once on transient failure
 
-- Check the `type` field:
-  - If `type` is `rss`: use WebFetch on the `url`. The response should
-    be XML. Parse `<item>` blocks for title, link, pubDate, and
-    description.
-  - If `type` is `html`: use WebFetch on the `url` and extract recent
-    articles from the HTML structure.
+For each source:
 
-- If the response is non-XML for an RSS source, returns a bot-challenge
-  page (Cloudflare "Just a moment", "Enable JavaScript"), or returns an
-  empty/thin body, log the source under "Sources needing manual review"
-  with the specific error and move on.
+Run the curl command with the source's url
+If exit code is non-zero or the response is empty, log the source under
+"Sources needing manual review" with the curl error and move on
+If type is rss: parse the XML for <item> blocks. Extract title,
+link, pubDate, description.
+If type is html: extract recent articles from the HTML. Look for
+publish dates in visible text.
+If response is a bot-challenge page (contains "Just a moment",
+"Enable JavaScript", or is suspiciously thin <500 chars for an HTML
+source), log it under manual review.
 
-- For RSS sources, treat the `<pubDate>` field as authoritative for the
-  publish date. For HTML sources, look for visible publish dates on the
-  page.
-
-- Never retry a failed source within the same run. Token cost isn't
-  worth it.
+Important: Never use WebFetch in this routine. The robots.txt timeout
+issue blocks too many of the target sources. curl is the correct tool
+for this environment.
 
 ### 3. Filter to new and recent items
 

@@ -28,6 +28,8 @@ size training providers. They care about:
 
 - Read `sources.json` for the list of URLs to check
 - Read `history/seen.json` for items already captured in past runs
+- Check if a report for today (`reports/daily-YYYY-MM-DD.md`) already exists.
+  If yes, read it — you'll merge with it in step 6.
 - Note today's date (provided in the prompt)
 - Confirm `FIRECRAWL_API_KEY` is available as an environment variable
 
@@ -42,6 +44,16 @@ curl -s -X POST 'https://api.firecrawl.dev/v2/scrape' \
   -H "Authorization: Bearer $FIRECRAWL_API_KEY" \
   -H 'Content-Type: application/json' \
   --data-raw "{\"url\":\"SOURCE_URL_HERE\"}"
+```
+
+For JavaScript-heavy sites (e.g. ASIC) where the initial scrape returns
+a loading placeholder, retry once with a wait parameter:
+
+```bash
+curl -s -X POST 'https://api.firecrawl.dev/v2/scrape' \
+  -H "Authorization: Bearer $FIRECRAWL_API_KEY" \
+  -H 'Content-Type: application/json' \
+  --data-raw "{\"url\":\"SOURCE_URL_HERE\",\"waitFor\":3000}"
 ```
 
 The response is JSON. The scraped content is in `data.markdown`. Parse
@@ -68,7 +80,8 @@ curl -sL \
 - If response is empty, returns an error JSON (`success: false`), or
   contains bot-challenge text, log under "Sources needing manual review"
   and move on
-- Never retry a failed source more than once
+- Never retry a failed source more than once (Firecrawl waitFor retry above
+  counts as the one retry — do not retry further)
 
 **Important:** Do NOT use the WebFetch tool — it performs a robots.txt
 check that times out on many sites. curl (with or without Firecrawl) is
@@ -114,7 +127,35 @@ Append every NEW item (HIGH and MEDIUM) to `history/seen.json` with:
 
 ### 6. Write the daily report
 
-Write to `reports/daily-YYYY-MM-DD.md` using this structure:
+**STRICT STRUCTURE RULES — DO NOT DEVIATE:**
+
+- ALWAYS use the EXACT headings defined in the template below
+- Do NOT rename, replace, or invent alternative headings (e.g.
+  "Items in history from today's runs", "Carried over from earlier runs",
+  "Items from morning run", etc.) — downstream tooling parses by exact
+  heading match
+- Do NOT add narrative paragraphs between the heading and the items
+  list — items must appear directly under their `### [Source Name]`
+  sub-heading
+
+**Merge behaviour:**
+
+- If a report for today already exists, READ its existing `## New items`
+  section. Merge any new items found in this run with the existing items
+  under that same `## New items` heading. Then rewrite the entire file.
+  Do NOT add a new section for "later items" or similar.
+- If there are zero new items this run BUT a prior report today exists,
+  preserve the prior report's `## New items` content verbatim and update
+  only the header counts and summary.
+- If there are zero new items AND no prior report today exists, write
+  the report with an empty `## New items` section containing only the
+  line: `_No new items found in this run._`
+
+**Counts in the header reflect the CUMULATIVE state of the report after
+merge** (i.e. total items in the merged `## New items` section), not just
+this run's contribution.
+
+Write to `reports/daily-YYYY-MM-DD.md` using this EXACT structure:
 
 ```markdown
 # RTO Monitor — Daily Report
@@ -137,7 +178,7 @@ Write to `reports/daily-YYYY-MM-DD.md` using this structure:
 Plain language. No marketing voice.]
 
 Content-worthy: YES / NO
-[If YES, one-line angle for LinkedIn]
+[If YES, one-line angle prefixed with "LinkedIn angle:"]
 
 URL: [link]
 
@@ -202,6 +243,7 @@ updates directly so deduplication works across runs.
 - **Token budget.** Daily report ≤2000 tokens. Weekly ≤3000.
 - **Firecrawl credit awareness.** Each Firecrawl call uses 1 credit.
   Don't re-fetch a source within the same run.
+- **Report structure is non-negotiable.** See section 6 strict rules.
 
 ## What "content-worthy" means
 

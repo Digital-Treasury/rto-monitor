@@ -1,69 +1,78 @@
 {
-  "description": "Source list for RTO regulatory news monitoring. RSS preferred where available. HTML sources may be blocked by bot protection — those failures are expected and logged for manual review.",
+  "description": "Source list for RTO regulatory news monitoring. Sources with requires_firecrawl=true are fetched via the Firecrawl API to bypass WAF/JS-rendering issues. Others use plain curl.",
   "last_updated": "2026-05-26",
   "sources": [
     {
-      "name": "ASQA News",
-      "url": "https://www.asqa.gov.au/rss.xml",
+      "name": "ASQA Latest News",
+      "url": "https://www.asqa.gov.au/newsroom/latest-news",
       "tier": 1,
-      "type": "rss",
-      "notes": "Primary RTO regulator. Currently blocked by WAF — may fail until alternative access (email subscription) is added."
+      "type": "html",
+      "requires_firecrawl": true,
+      "notes": "Primary RTO regulator. WAF-blocked to curl, accessible via Firecrawl. Canonical news index page."
+    },
+    {
+      "name": "ASQA Media Releases",
+      "url": "https://www.asqa.gov.au/news-events/media-releases",
+      "tier": 1,
+      "type": "html",
+      "requires_firecrawl": true,
+      "notes": "ASQA enforcement actions and deregistrations. Highest signal for LinkedIn content."
     },
     {
       "name": "Skills Insight",
       "url": "https://skillsinsight.com.au/news/feed",
       "tier": 1,
       "type": "rss",
-      "notes": "Jobs and Skills Council. Apex domain (no www) — confirmed via redirect resolution."
+      "requires_firecrawl": false,
+      "notes": "Jobs and Skills Council. RSS works via curl directly."
     },
     {
       "name": "ITECA News",
       "url": "https://www.iteca.edu.au/news",
       "tier": 2,
       "type": "html",
-      "notes": "Independent Tertiary Education Council. Working as of 2026-05-26."
+      "requires_firecrawl": false,
+      "notes": "Independent Tertiary Education Council. Working via curl as of 2026-05-26."
     },
     {
       "name": "ASIC Newsroom",
       "url": "https://asic.gov.au/newsroom",
       "tier": 2,
       "type": "html",
+      "requires_firecrawl": false,
       "notes": "Working via underlying JSON API. Filter heavily — most ASIC news not RTO-relevant."
     },
     {
       "name": "TEQSA News",
-      "url": "https://www.teqsa.gov.au/rss.xml",
+      "url": "https://www.teqsa.gov.au/latest-news",
       "tier": 2,
-      "type": "rss",
-      "notes": "Higher ed regulator. Currently WAF-blocked — keep in list in case access improves."
-    },
-    {
-      "name": "training.gov.au",
-      "url": "https://training.gov.au",
-      "tier": 1,
       "type": "html",
-      "notes": "JS-rendered SPA — currently inaccessible via curl. Keep in list pending Playwright option."
+      "requires_firecrawl": true,
+      "notes": "Higher ed regulator. WAF-blocked to curl, try via Firecrawl."
     },
     {
       "name": "DEWR Skills and Training",
       "url": "https://www.dewr.gov.au/skills-and-training",
       "tier": 1,
       "type": "html",
-      "notes": "Currently WAF-blocked. Keep in list in case access improves."
+      "requires_firecrawl": true,
+      "notes": "WAF-blocked to curl, try via Firecrawl."
     },
     {
       "name": "NCVER News",
       "url": "https://www.ncver.edu.au/news-and-events",
       "tier": 2,
       "type": "html",
-      "notes": "Cloudflare JS challenge — inaccessible via curl. Keep in list pending Playwright option."
+      "requires_firecrawl": true,
+      "notes": "Cloudflare-protected. Firecrawl should handle it."
     },
     {
-      "name": "Home Affairs CRICOS",
-      "url": "https://cricos.education.gov.au/",
-      "tier": 2,
+      "name": "training.gov.au",
+      "url": "https://training.gov.au",
+      "tier": 1,
       "type": "html",
-      "notes": "Original URL returns 404. Verify in browser and replace. Try: https://cricos.education.gov.au/ or https://www.education.gov.au/cricos"
+      "requires_firecrawl": true,
+      "notes": "JS-rendered SPA. Firecrawl renders JS, should work."
     }
   ]
 }

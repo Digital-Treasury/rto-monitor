@@ -60,7 +60,7 @@
     },
     {
       "name": "Home Affairs CRICOS",
-      "url": "REPLACE_WITH_WORKING_URL",
+      "url": "https://cricos.education.gov.au/",
       "tier": 2,
       "type": "html",
       "notes": "Original URL returns 404. Verify in browser and replace. Try: https://cricos.education.gov.au/ or https://www.education.gov.au/cricos"

@@ -54,6 +54,18 @@
       "title_hash": "8a59f337",
       "captured": "2026-05-29",
       "source": "NCVER"
+    },
+    {
+      "url": "https://www.teqsa.gov.au/about-us/news-and-events/latest-news/education-agents-and-commissions",
+      "title_hash": "64f4e142",
+      "captured": "2026-06-04",
+      "source": "TEQSA News"
+    },
+    {
+      "url": "https://www.iteca.edu.au/news/ITECA%20%E2%80%93%20English%20Australia%20MOU%20Announced;%20International%20Education%20Benefits.aspx",
+      "title_hash": "5e3683f8",
+      "captured": "2026-06-04",
+      "source": "ITECA News"
     }
   ]
 }

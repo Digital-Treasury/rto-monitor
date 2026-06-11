@@ -28,11 +28,11 @@
     },
     {
       "name": "Jobs and Skills Australia",
-      "url": "https://www.jobsandskills.gov.au/news-and-media",
+      "url": "https://www.jobsandskills.gov.au/news",
       "tier": 1,
       "type": "html",
       "requires_firecrawl": true,
-      "notes": "Strategic workforce body. Reports shape which qualifications get funding priority. Likely WAF-protected."
+      "notes": "Strategic workforce body. Reports shape which qualifications get funding priority. /news-and-media URL returns 404 as of 2026-06-11; correct URL is /news."
     },
     {
       "name": "Home Affairs Newsroom",

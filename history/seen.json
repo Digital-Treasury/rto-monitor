@@ -618,6 +618,24 @@
       "title_hash": "1009981c",
       "captured": "2026-08-31",
       "source": "ITECA News"
+    },
+    {
+      "url": "https://skillsinsight.com.au/news/meat-processing-drafts-available-for-comment/",
+      "title_hash": "0089519e",
+      "captured": "2026-09-01",
+      "source": "Skills Insight"
+    },
+    {
+      "url": "https://www.teqsa.gov.au/about-us/news-and-events/latest-news/annual-reporting-requirements-offshore-courses-published",
+      "title_hash": "0f214ec2",
+      "captured": "2026-09-01",
+      "source": "TEQSA News"
+    },
+    {
+      "url": "https://www.teqsa.gov.au/about-us/news-and-events/latest-news/teqsa-publishes-its-2026-30-corporate-plan",
+      "title_hash": "f798d802",
+      "captured": "2026-09-01",
+      "source": "TEQSA News"
     }
   ]
 }

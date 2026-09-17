@@ -726,6 +726,18 @@
       "title_hash": "82211b75",
       "captured": "2026-09-15",
       "source": "TEQSA News"
+    },
+    {
+      "url": "https://www.asic.gov.au/about-asic/news-centre/news-items/asic-remakes-qualified-accountant-legislative-instrument",
+      "title_hash": "f62fd864",
+      "captured": "2026-09-17",
+      "source": "ASIC Newsroom"
+    },
+    {
+      "url": "https://www.jobsandskills.gov.au/news/occupation-shortage-report-now-available-new-look-employer-activity-insights-interactive-table",
+      "title_hash": "051256f8",
+      "captured": "2026-09-17",
+      "source": "Jobs and Skills Australia"
     }
   ]
 }

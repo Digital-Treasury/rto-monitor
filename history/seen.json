@@ -744,6 +744,24 @@
       "title_hash": "b4795da9",
       "captured": "2026-09-21",
       "source": "ASQA Latest News"
+    },
+    {
+      "url": "https://skillsinsight.com.au/news/retail-butchery-and-smallgoods-project/",
+      "title_hash": "8405e829",
+      "captured": "2026-09-23",
+      "source": "Skills Insight"
+    },
+    {
+      "url": "https://www.jobsandskills.gov.au/news/job-ads-edge-nationally-august-2026",
+      "title_hash": "3f23fb8c",
+      "captured": "2026-09-23",
+      "source": "Jobs and Skills Australia"
+    },
+    {
+      "url": "https://www.asic.gov.au/about-asic/news-centre/news-items/asic-releases-august-2026-financial-adviser-exam-results",
+      "title_hash": "7a92e9b2",
+      "captured": "2026-09-23",
+      "source": "ASIC Newsroom"
     }
   ]
 }

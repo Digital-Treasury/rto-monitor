@@ -768,6 +768,18 @@
       "title_hash": "89227f78",
       "captured": "2026-09-24",
       "source": "training.gov.au"
+    },
+    {
+      "url": "https://www.jobsandskills.gov.au/news/changing-recruitment-trends-it-industry",
+      "title_hash": "1e8b85f0",
+      "captured": "2026-09-25",
+      "source": "Jobs and Skills Australia"
+    },
+    {
+      "url": "https://www.asic.gov.au/about-asic/news-centre/find-a-media-release/2026-releases/26-229mr-former-warwick-gold-and-impact-gold-director-yuetu-ma-disqualified-from-managing-corporations-for-four-years",
+      "title_hash": "1777cdc8",
+      "captured": "2026-09-25",
+      "source": "ASIC Newsroom"
     }
   ]
 }

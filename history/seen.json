@@ -780,6 +780,18 @@
       "title_hash": "1777cdc8",
       "captured": "2026-09-25",
       "source": "ASIC Newsroom"
+    },
+    {
+      "url": "https://training.gov.au",
+      "title_hash": "b401cd51",
+      "captured": "2026-09-28",
+      "source": "training.gov.au"
+    },
+    {
+      "url": "https://www.asqa.gov.au/node/728",
+      "title_hash": "2d40faed",
+      "captured": "2026-09-28",
+      "source": "ASQA Latest News"
     }
   ]
 }

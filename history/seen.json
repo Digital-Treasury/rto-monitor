@@ -834,6 +834,24 @@
       "title_hash": "f4e18057",
       "captured": "2026-10-01",
       "source": "TEQSA News"
+    },
+    {
+      "url": "https://www.asqa.gov.au/node/729",
+      "title_hash": "01458c8a",
+      "captured": "2026-10-05",
+      "source": "ASQA Latest News"
+    },
+    {
+      "url": "https://skillsinsight.com.au/news/textiles-clothing-and-footwear-skills-mapping/",
+      "title_hash": "1255297f",
+      "captured": "2026-10-05",
+      "source": "Skills Insight"
+    },
+    {
+      "url": "https://skillsinsight.com.au/news/new-entrants-as-sewing-machinists/",
+      "title_hash": "283a4494",
+      "captured": "2026-10-05",
+      "source": "Skills Insight"
     }
   ]
 }

@@ -996,6 +996,24 @@
       "title_hash": "001d1063",
       "captured": "2026-10-23",
       "source": "TEQSA News"
+    },
+    {
+      "url": "https://www.asqa.gov.au/node/3051",
+      "title_hash": "807b82ff",
+      "captured": "2026-10-26",
+      "source": "ASQA Latest News"
+    },
+    {
+      "url": "https://www.iteca.edu.au/web/news/Articles/2026/National_Update%20-%20When%20the%20Market%20Stops%20Waiting.aspx",
+      "title_hash": "05029cce",
+      "captured": "2026-10-26",
+      "source": "ITECA News"
+    },
+    {
+      "url": "https://www.ncver.edu.au/research-and-statistics/publications/all-publications/government-funding-of-vet-2025",
+      "title_hash": "ff9092cb",
+      "captured": "2026-10-26",
+      "source": "NCVER News"
     }
   ]
 }

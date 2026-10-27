@@ -1014,6 +1014,24 @@
       "title_hash": "ff9092cb",
       "captured": "2026-10-26",
       "source": "NCVER News"
+    },
+    {
+      "url": "https://www.jobsandskills.gov.au/news/statement-clarifying-media-references-139000-jobs-lost-ai",
+      "title_hash": "6fece447",
+      "captured": "2026-10-27",
+      "source": "Jobs and Skills Australia"
+    },
+    {
+      "url": "https://www.jobsandskills.gov.au/news/atlas-discover-makes-jobs-and-skill-data-more-accessible-1",
+      "title_hash": "dce4cfb9",
+      "captured": "2026-10-27",
+      "source": "Jobs and Skills Australia"
+    },
+    {
+      "url": "https://www.asic.gov.au/about-asic/news-centre/find-a-media-release/2026-releases/26-258mr-asic-review-provides-insight-into-insolvent-liquidation-process-and-outcomes",
+      "title_hash": "f5de99b3",
+      "captured": "2026-10-27",
+      "source": "ASIC Newsroom"
     }
   ]
 }

@@ -1164,6 +1164,18 @@
       "title_hash": "780a12c1",
       "captured": "2026-11-12",
       "source": "TEQSA News"
+    },
+    {
+      "url": "https://www.jobsandskills.gov.au/news/skilled-migrants-role-australias-labour-market",
+      "title_hash": "704ada58",
+      "captured": "2026-11-13",
+      "source": "Jobs and Skills Australia"
+    },
+    {
+      "url": "https://www.iteca.edu.au/web/news/Articles/2026/FSO%20Skills%20Accelerator-AI_AI%20for%20VET%20admin%20and%20compliance%20%E2%80%93%20Validation%20and%20prioritisation%20workshop.aspx",
+      "title_hash": "a380e193",
+      "captured": "2026-11-13",
+      "source": "ITECA News"
     }
   ]
 }
